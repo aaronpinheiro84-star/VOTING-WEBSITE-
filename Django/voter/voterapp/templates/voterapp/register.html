@@ -1,0 +1,350 @@
+{% extends 'voterapp/base.html' %}
+{% block content %}
+
+<style>
+
+/* Animated Background Glow */
+.register-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:85vh;
+    position:relative;
+}
+
+.register-wrapper::before{
+    content:"";
+    position:absolute;
+    width:500px;
+    height:500px;
+    background:radial-gradient(circle,#00f2fe55,#4facfe33,transparent);
+    filter:blur(120px);
+    animation:floatGlow 6s infinite alternate ease-in-out;
+    z-index:0;
+}
+
+@keyframes floatGlow{
+    from{transform:translate(-50px,-30px);}
+    to{transform:translate(50px,30px);}
+}
+
+/* Premium Glass Card */
+.register-box{
+    width:480px;
+    padding:45px;
+    border-radius:25px;
+    backdrop-filter:blur(25px);
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15);
+    box-shadow:0 25px 60px rgba(0,0,0,0.6);
+    color:white;
+    position:relative;
+    z-index:1;
+    transition:0.4s ease;
+}
+
+.register-box:hover{
+    transform:translateY(-5px);
+    box-shadow:0 35px 70px rgba(0,0,0,0.7);
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(40px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+/* Title */
+.register-box h2{
+    text-align:center;
+    margin-bottom:35px;
+    font-weight:700;
+    font-size:28px;
+    letter-spacing:1px;
+    background:linear-gradient(90deg,#00f2fe,#4facfe,#00f2fe);
+    background-size:200% auto;
+
+    background-clip:text;
+    -webkit-background-clip:text;
+
+    color:transparent;
+    -webkit-text-fill-color:transparent;
+
+    animation:shine 4s linear infinite;
+}
+
+@keyframes shine{
+    to{background-position:200% center;}
+}
+
+/* Labels */
+.register-box label{
+    font-size:13px;
+    font-weight:500;
+    opacity:0.9;
+}
+
+/* Inputs */
+.register-box input,
+.register-box select{
+    width:100%;
+    padding:14px;
+    margin:8px 0 20px 0;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.12);
+    color:white;
+    font-size:14px;
+    transition:0.3s;
+}
+
+.register-box input::placeholder{
+    color:#ddd;
+}
+
+.register-box input:focus,
+.register-box select:focus{
+    background:rgba(255,255,255,0.2);
+    border:1px solid #00f2fe;
+    box-shadow:0 0 15px #00f2fe66;
+    transform:scale(1.02);
+}
+
+/* Premium Button */
+.register-box button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:50px;
+    background:linear-gradient(90deg,#00f2fe,#4facfe);
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transition:0.4s;
+}
+
+.register-box button::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-100%;
+    width:100%;
+    height:100%;
+    background:linear-gradient(120deg,transparent,rgba(255,255,255,0.6),transparent);
+    transition:0.6s;
+}
+
+.register-box button:hover::before{
+    left:100%;
+}
+
+.register-box button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 25px rgba(0,0,0,0.6);
+}
+
+/* Login link */
+.login-link{
+    text-align:center;
+    margin-top:20px;
+    font-size:14px;
+}
+
+.login-link a{
+    color:#00f2fe;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.login-link a:hover{
+    text-decoration:underline;
+}
+
+/* Premium Popup */
+.popup{
+    position:fixed;
+    top:30px;
+    left:50%;
+    transform:translateX(-50%) translateY(-30px);
+    padding:18px 30px;
+    border-radius:15px;
+    backdrop-filter:blur(25px);
+    background:rgba(0,0,0,0.7);
+    color:white;
+    font-weight:600;
+    box-shadow:0 20px 50px rgba(0,0,0,0.7);
+    animation:slideDown 0.6s ease forwards;
+    z-index:9999;
+    opacity:0;
+}
+
+.popup.success{
+    border-left:6px solid #00ffae;
+}
+
+.popup.error{
+    border-left:6px solid #ff4b5c;
+}
+
+@keyframes slideDown{
+    to{
+        transform:translateX(-50%) translateY(0);
+        opacity:1;
+    }
+}
+
+@media(max-width:520px){
+    .register-box{
+        width:100%;
+        padding:30px;
+    }
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: linear-gradient(135deg,#ff416c,#ff4b2b);
+    padding: 35px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    width: 350px;
+    animation: popUp 0.4s ease;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+}
+
+.modal-content button {
+    margin-top: 20px;
+    padding: 10px 25px;
+    border-radius: 25px;
+    border: none;
+    background: white;
+    color: #ff416c;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.modal-content button:hover {
+    transform: scale(1.1);
+}
+
+@keyframes popUp {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+</style>
+
+{% if messages %}
+    {% for message in messages %}
+        <div id="popup" class="popup {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="register-wrapper">
+    <div class="register-box">
+
+        <h2>🗳 National Voter Registration</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Full Name</label>
+            <input type="text" name="fullname" placeholder="Enter full name" required>
+
+            <label>Date of Birth</label>
+            <input type="date" name="dob" required>
+
+            <label>Gender</label>
+            <select name="gender" required>
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select>
+
+            <label>Aadhaar Number</label>
+            <input type="text" name="aadhaar_number"
+                   pattern="[0-9]{12}" maxlength="12"
+                   placeholder="Enter 12-digit Aadhaar Number" required>
+
+            <label>Mobile Number</label>
+            <input type="tel" name="mobile" placeholder="Enter mobile number" required>
+
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter email">
+
+            <label>Address</label>
+            <input type="text" name="address" placeholder="Enter address" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Create password" required>
+
+            <button type="submit">Apply for Voter ID</button>
+        </form>
+
+        <div class="login-link">
+            Already registered? <a href="{% url 'login' %}">Login here</a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+setTimeout(function(){
+    let popup=document.getElementById("popup");
+    if(popup){
+        popup.style.opacity="0";
+        popup.style.transform="translateX(-50%) translateY(-30px)";
+        setTimeout(()=>popup.remove(),500);
+    }
+},3000);
+</script>
+<script>
+document.querySelector("form").addEventListener("submit", function(e){
+
+    let dob = document.querySelector("input[name='dob']").value;
+    let birthDate = new Date(dob);
+    let today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    let m = today.getMonth() - birthDate.getMonth();
+
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+    if(age < 18){
+        e.preventDefault();
+        document.getElementById("ageModal").style.display = "flex";
+    }
+});
+
+function closeModal(){
+    document.getElementById("ageModal").style.display = "none";
+}
+</script>
+<div id="ageModal" class="modal">
+    <div class="modal-content">
+        <h2>⚠ Registration Blocked</h2>
+        <p>You must be at least <strong>18 years old</strong> to register for voting.</p>
+        <button onclick="closeModal()">OK</button>
+    </div>
+</div>
+{% endblock %}

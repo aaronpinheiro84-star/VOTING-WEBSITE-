@@ -1,0 +1,100 @@
+{% extends 'voterapp/base.html' %}
+{% block content %}
+
+<style>
+
+.dashboard-page{
+    min-height: 100vh;
+    padding: 40px;
+    background: linear-gradient(-45deg, #141E30, #243B55, #0f2027, #2c5364);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.dashboard-title{
+    text-align:center;
+    color:white;
+    font-size:32px;
+    font-weight:600;
+    margin-bottom:40px;
+}
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:30px;
+}
+
+.dashboard-card{
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    color:white;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    transition:0.4s;
+}
+
+.dashboard-card:hover{
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 25px 45px rgba(0,0,0,0.6);
+}
+
+.dashboard-card h3{
+    font-size:18px;
+    margin-bottom:15px;
+    opacity:0.9;
+}
+
+.dashboard-card p{
+    font-size:36px;
+    font-weight:bold;
+}
+
+.card-total { background: linear-gradient(135deg,#667eea,#764ba2); }
+.card-approved { background: linear-gradient(135deg,#11998e,#38ef7d); }
+.card-pending { background: linear-gradient(135deg,#f7971e,#ffd200); }
+.card-votes { background: linear-gradient(135deg,#fc466b,#3f5efb); }
+
+</style>
+
+<div class="dashboard-page">
+
+    <div class="dashboard-title">
+        🗳 Admin Control Panel
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-card card-total">
+            <h3>Total Registered Voters</h3>
+            <p>{{ total_voters }}</p>
+        </div>
+
+        <div class="dashboard-card card-approved">
+            <h3>Approved Voters</h3>
+            <p>{{ approved_voters }}</p>
+        </div>
+
+        <div class="dashboard-card card-pending">
+            <h3>Pending Approvals</h3>
+            <p>{{ pending_voters }}</p>
+        </div>
+
+        <div class="dashboard-card card-votes">
+            <h3>Total Votes Cast</h3>
+            <p>{{ total_votes }}</p>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

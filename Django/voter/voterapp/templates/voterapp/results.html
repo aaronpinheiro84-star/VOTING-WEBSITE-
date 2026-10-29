@@ -1,0 +1,202 @@
+{% extends 'voterapp/base.html' %}
+
+{% block content %}
+    <meta http-equiv="refresh" content="10">
+    <meta charset="UTF-8">
+    <title>Election Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .election-name {
+            text-align: center;
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .total-votes {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 🏆 Winner Highlight */
+        .winner {
+            border: 2px solid gold;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px gold; }
+            to { box-shadow: 0 0 25px gold; }
+        }
+
+        .winner-badge {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-weight: bold;
+            color: gold;
+            font-size: 0.9rem;
+        }
+
+        .candidate-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .party-name {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .votes {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            margin-bottom: 12px;
+        }
+
+        .progress {
+            background: rgba(255,255,255,0.15);
+            border-radius: 30px;
+            overflow: hidden;
+            height: 14px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            width: 0;
+            animation: fill 1.5s ease forwards;
+        }
+
+        @keyframes fill {
+            from { width: 0; }
+            to { width: var(--percent); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            border-radius: 30px;
+            background: linear-gradient(90deg, #ff512f, #dd2476);
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+
+
+<div class="container">
+
+    <div class="title">📊 Election Results</div>
+    <div class="subtitle">Live Vote Count Overview (Auto Refresh Every 10s)</div>
+
+    {% if election %}
+        <div class="election-name">
+            🗳️ {{ election.title }}
+        </div>
+    {% endif %}
+
+    <div class="total-votes">
+        Total Votes Cast: <strong>{{ total_votes }}</strong>
+    </div>
+
+    {% for candidate in results %}
+    <div class="result-card {% if candidate.is_winner %}winner{% endif %}">
+
+        {% if candidate.is_winner %}
+            <div class="winner-badge">🏆 LEADING</div>
+        {% endif %}
+
+        <div class="candidate-name">
+            {{ candidate.name }}
+        </div>
+
+        <div class="party-name">
+            {{ candidate.party }}
+        </div>
+
+        <div class="votes">
+            Votes: {{ candidate.vote_count }} 
+            ({{ candidate.percentage }}%)
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar"
+                 style="--percent: {{ candidate.percentage }}%;">
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <p style="text-align:center;">No results available yet.</p>
+    {% endfor %}
+
+    <div class="footer">
+        <a href="{% url 'home' %}" class="back-btn">⬅ Back to Dashboard</a>
+    </div>
+
+</div>
+
+{% endblock %}

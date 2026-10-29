@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VoteSecure System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body{
+            margin:0;
+            font-family:'Poppins',sans-serif;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            min-height:100vh;
+            overflow-x:hidden;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar{
+            background:rgba(0,0,0,0.85);
+            color:white;
+            padding:18px 50px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            font-weight:600;
+            letter-spacing:1px;
+            backdrop-filter:blur(10px);
+            box-shadow:0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .navbar span{
+            font-size:22px;
+            background:linear-gradient(90deg,#ff512f,#dd2476);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        /* ===== PREMIUM FLOATING BACK BUTTON ===== */
+        .grand-back{
+            position:fixed;
+            top:25px;
+            left:25px;
+            z-index:1000;
+        }
+
+        .grand-back button{
+            width:65px;
+            height:65px;
+            border:none;
+            border-radius:50%;
+            cursor:pointer;
+            font-size:22px;
+            font-weight:600;
+            color:white;
+            backdrop-filter:blur(15px);
+            background:rgba(255,255,255,0.15);
+            border:1px solid rgba(255,255,255,0.3);
+            box-shadow:
+                0 10px 25px rgba(0,0,0,0.35),
+                inset 0 0 10px rgba(255,255,255,0.2);
+            transition:all 0.35s ease;
+            position:relative;
+            overflow:hidden;
+        }
+
+        /* Glow ring */
+        .grand-back button::before{
+            content:"";
+            position:absolute;
+            inset:-3px;
+            border-radius:50%;
+            background:linear-gradient(135deg,#ff512f,#dd2476,#667eea);
+            z-index:-1;
+            opacity:0;
+            transition:opacity 0.3s ease;
+        }
+
+        .grand-back button:hover{
+            transform:translateY(-5px) scale(1.08);
+            box-shadow:
+                0 20px 40px rgba(0,0,0,0.5),
+                inset 0 0 15px rgba(255,255,255,0.3);
+        }
+
+        .grand-back button:hover::before{
+            opacity:1;
+        }
+
+        .grand-back button:active{
+            transform:scale(0.95);
+        }
+
+        /* ===== PAGE CONTENT ===== */
+        .container{
+            padding:50px;
+            animation:fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn{
+            from{
+                opacity:0;
+                transform:translateY(20px);
+            }
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        /* ===== PRINT MODE ===== */
+        @media print{
+            .navbar, .grand-back{
+                display:none;
+            }
+        }
+
+        /* ===== MOBILE RESPONSIVE ===== */
+        @media(max-width:768px){
+            .container{
+                padding:25px;
+            }
+
+            .grand-back button{
+                width:55px;
+                height:55px;
+                font-size:18px;
+            }
+
+            .navbar{
+                padding:15px 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+
+
+<!-- PREMIUM FLOATING BACK BUTTON -->
+<div class="grand-back">
+    <button onclick="goBack()">←</button>
+</div>
+
+<!-- PAGE CONTENT -->
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script>
+function goBack(){
+    if(document.referrer !== ""){
+        window.history.back();
+    } else {
+        window.location.href = "/";
+    }
+}
+</script>
+
+</body>
+</html>

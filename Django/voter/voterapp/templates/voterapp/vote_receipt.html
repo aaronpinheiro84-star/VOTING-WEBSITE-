@@ -1,0 +1,193 @@
+{% extends 'voterapp/base.html' %}
+
+{% block content %}
+<meta charset="UTF-8">
+<title>Official Vote Receipt</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(-45deg,#667eea,#764ba2,#ff6a00,#ee0979);
+    background-size:400% 400%;
+    animation:gradientBG 10s ease infinite;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+@keyframes gradientBG{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.receipt{
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(20px);
+    width:750px;
+    padding:45px;
+    border-radius:25px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+    color:white;
+    position:relative;
+    overflow:hidden;
+}
+
+/* watermark */
+.receipt::before{
+    content:"VOTE SECURE";
+    position:absolute;
+    font-size:80px;
+    font-weight:700;
+    color:rgba(255,255,255,0.05);
+    top:40%;
+    left:10%;
+    transform:rotate(-30deg);
+}
+
+.header{
+    text-align:center;
+    border-bottom:2px solid rgba(255,255,255,0.3);
+    padding-bottom:20px;
+    margin-bottom:30px;
+}
+
+.header h2{
+    margin:0;
+    font-weight:700;
+    font-size:28px;
+}
+
+.gov{
+    font-size:14px;
+    opacity:0.8;
+}
+
+.section{
+    margin-bottom:18px;
+    font-size:16px;
+    padding:12px 18px;
+    background:rgba(255,255,255,0.12);
+    border-radius:15px;
+}
+
+.label{
+    font-weight:600;
+    color:#ffd700;
+}
+
+.success{
+    text-align:center;
+    margin-top:30px;
+    padding:18px;
+    background:linear-gradient(45deg,#00c853,#64dd17);
+    border-radius:20px;
+    font-weight:600;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.print-btn{
+    margin-top:35px;
+    text-align:center;
+}
+
+.print-btn button{
+    padding:14px 40px;
+    border:none;
+    border-radius:40px;
+    background:linear-gradient(45deg,#00f2fe,#4facfe);
+    color:white;
+    font-weight:600;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.print-btn button:hover{
+    transform:scale(1.1);
+    box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* official seal */
+.seal{
+    position:absolute;
+    top:20px;
+    right:20px;
+    background:radial-gradient(circle,#ffd700,#ff9800);
+    color:black;
+    padding:15px;
+    border-radius:50%;
+    font-weight:700;
+    font-size:12px;
+    text-align:center;
+    box-shadow:0 5px 20px rgba(0,0,0,0.4);
+}
+
+@media print{
+    body{
+        background:white;
+    }
+    .print-btn{
+        display:none;
+    }
+}
+</style>
+
+
+
+
+<div class="receipt">
+
+    <div class="seal">
+        OFFICIAL<br>VERIFIED
+    </div>
+
+    <div class="header">
+        <h2>🗳️ VoteSecure System</h2>
+        <div class="gov">Official Digital Voting Receipt</div>
+    </div>
+
+    <div class="section">
+        <span class="label">Voter Name:</span> {{ voter.fullname }}
+    </div>
+
+    <div class="section">
+        <span class="label">Election:</span> {{ vote.election.title }}
+    </div>
+
+    <div class="section">
+        <span class="label">Candidate Voted:</span> {{ vote.candidate.name }}
+    </div>
+
+    <div class="section">
+        <span class="label">Party:</span> {{ vote.candidate.party }}
+    </div>
+
+    <div class="section">
+        <span class="label">Vote Date & Time:</span> {{ vote.timestamp }}
+    </div>
+
+    <div class="section">
+        <span class="label">Transaction ID:</span> VOTE{{ vote.id }}SECURE
+    </div>
+
+    <div class="success">
+        ✅ Your vote has been securely recorded & encrypted in the system.
+    </div>
+
+
+    <div class="print-btn">
+        <button onclick="window.print()">🖨️ Print Receipt</button>
+    </div>
+
+</div>
+
+<script>
+history.pushState(null, null, location.href);
+window.onpopstate = function () {
+    window.location.href = "{% url 'home' %}";
+};
+</script>
+{% endblock %}

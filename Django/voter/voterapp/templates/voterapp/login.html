@@ -1,0 +1,153 @@
+{% extends 'voterapp/base.html' %}
+
+{% block content %}
+    <meta charset="UTF-8">
+    <title>Voter Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #ff416c, #ff4b2b, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            width: 350px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+
+        .message {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #ffdddd;
+            font-size: 14px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .register-link a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+
+    <div class="login-box">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <h2>Voter Login</h2>
+
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <div class="input-group">
+                <label>Aadhaar Number</label>
+                <input type="text" name="username"
+                       pattern="\d{12}"
+                       title="Enter 12-digit Aadhaar number"
+                       maxlength="12"
+                       required>
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter your Password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <div class="register-link">
+            <a href="/register/">Don’t have an account? Register</a>
+        </div>
+
+    </div>
+
+{% endblock %}
