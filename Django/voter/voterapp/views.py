@@ -172,15 +172,18 @@ def home(request):
 
 
 # ---------------- VOTE ----------------
+import random
+import socket
+import logging
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-import random
 
 from .models import Election, Candidate, Voter, Vote
 
+logger = logging.getLogger(__name__)
 
 @login_required
 def vote(request):
@@ -219,7 +222,6 @@ def vote(request):
             return redirect("vote")
         
         photo_data = request.POST.get("photo_data")
-
         request.session["photo_data"] = photo_data
 
         # ✅ Generate OTP ONLY ONCE
@@ -232,19 +234,27 @@ def vote(request):
         request.session.modified = True
 
         print("OTP GENERATED:", otp)
-        print("Sending to:", request.user.email)
+        print("Sending to:", voter_profile.email)
 
-        # Send Email
-        send_mail(
-            "Voting OTP Verification",
-            f"Your OTP for voting is: {otp}",
-            "aaronpinheiro84@gmail.com",
-            [voter_profile.email], 
-            fail_silently=False,
-        )
+        # ✅ Wrap network/email execution in a safe error block
+        try:
+            send_mail(
+                "Voting OTP Verification",
+                f"Your OTP for voting is: {otp}",
+                "aaronpinheiro84@gmail.com",
+                [voter_profile.email], 
+                fail_silently=False,
+            )
+            messages.info(request, "📧 OTP sent to your registered email.")
+            return redirect("verify_otp")
 
-        messages.info(request, "📧 OTP sent to your registered email.")
-        return redirect("verify_otp")
+        except (socket.error, Exception) as e:
+            logger.error(f"Network error when dispatching email to {voter_profile.email}: {e}")
+            messages.error(
+                request, 
+                "❌ System was unable to send verification email. Please check your network or try again."
+            )
+            return redirect("vote")
 
     return render(request, "voterapp/vote.html", {
         "candidates": candidates,
